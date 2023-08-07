@@ -26,6 +26,7 @@ public class GUIPlagio extends JFrame {
     public JButton clearText;
 
     public DefaultTableModel modelTable;
+    public JTable tabla;
 
     public GUIPlagio() {
 
@@ -110,16 +111,8 @@ public class GUIPlagio extends JFrame {
 
         this.modelTable = new DefaultTableModel();
         modelTable.setColumnIdentifiers(new String[]{"ID","Nombre de archivo", "Direccion"});
-        JTable tabla = new JTable(modelTable);
+        this.tabla = new JTable(modelTable);
         JScrollPane scrollTable = new JScrollPane(tabla);
-
-        tabla.getSelectionModel().addListSelectionListener(e -> {
-            int viewRow = tabla.getSelectedRow();
-            if (!e.getValueIsAdjusting() && viewRow != -1) {
-                this.diselect.setEnabled(true);
-                this.removeFile.setEnabled(true);
-            }
-        });
 
         JPanel textPanelShow = new JPanel();
         textPanelShow.setLayout(null);
