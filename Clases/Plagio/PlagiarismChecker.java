@@ -46,7 +46,7 @@ public class PlagiarismChecker {
                 if (trie.search(word, j)) {
                     int startIndex = j;
                     int endIndex = j + word.length() - 1;
-                    resultChecker.addMatch(startIndex, endIndex);
+                    resultChecker.addMatch(startIndex, endIndex, trie);
                 }
             }
         }

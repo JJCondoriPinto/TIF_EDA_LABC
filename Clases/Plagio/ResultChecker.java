@@ -1,5 +1,6 @@
 package Clases.Plagio;
 import Clases.Listas.*;
+import Clases.Trie.Trie;
 
 public class ResultChecker {
     private String originalText;
@@ -10,9 +11,10 @@ public class ResultChecker {
         matches = new LinkedList<>(null);
     }
 
-    public void addMatch(int startIndex, int endIndex) {
-        matches.add(new Match(startIndex, endIndex));
-    }
+    public void addMatch(int startIndex, int endIndex, Trie trie) {
+    Match match = new Match(startIndex, endIndex, trie);
+    matches.add(match);
+}
 
     public String getOriginalText() {
         return originalText;
