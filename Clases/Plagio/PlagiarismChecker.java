@@ -8,9 +8,9 @@ import java.util.Scanner;
 
 public class PlagiarismChecker {
 
-    private LinkedList<Trie> tries;
+    private LinkedList<FileDB> tries;
 
-    public PlagiarismChecker(LinkedList<Trie> tries) {
+    public PlagiarismChecker(LinkedList<FileDB> tries) {
         this.tries = tries;
     }
 

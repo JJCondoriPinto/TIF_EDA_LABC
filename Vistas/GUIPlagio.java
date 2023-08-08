@@ -196,4 +196,11 @@ public class GUIPlagio extends JFrame {
         panel.add(this.loadFileText);
         panel.add(this.clearText);
     }
+
+    public void clearFields() {
+        this.titulo.setText("");
+        this.autor.setText("");
+        this.descripcion.setText("");
+        this.textShow.setText("");
+    }
 }

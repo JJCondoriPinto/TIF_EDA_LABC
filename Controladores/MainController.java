@@ -11,6 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import Clases.Plagio.FileDB;
 import Vistas.GUIPlagio;
 
 public class MainController implements ListSelectionListener, ActionListener{
@@ -42,9 +43,14 @@ public class MainController implements ListSelectionListener, ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.interfaz.addTextDb) {
             String text = this.interfaz.textShow.getText();
+            String autor = this.interfaz.autor.getText();
+            String titulo = this.interfaz.titulo.getText();
+            String descripcion = this.interfaz.descripcion.getText();
             if (!text.equals("")) {
-                this.funcionalidad.addFileText(text);
-                
+                int id = this.funcionalidad.addFileText(text, titulo, autor, descripcion);
+                String[] row = new String[]{Integer.toString(id), titulo, autor};
+                this.interfaz.modelTable.addRow(row);
+                this.interfaz.clearFields();
             }
         } else if (e.getSource() == this.interfaz.loadFileText) { // Para cargar texto a analizar desde archivo
             JFileChooser fileChooser = new JFileChooser();
@@ -83,9 +89,18 @@ public class MainController implements ListSelectionListener, ActionListener{
                 
             }
         } else if (e.getSource() == this.interfaz.removeFile) {
-
+            String idStr = this.interfaz.modelTable.getValueAt(this.interfaz.tabla.getSelectedRow(), 0).toString(); // id
+            int id = Integer.parseInt(idStr);
+            FileDB res = this.funcionalidad.removeFile(id);
+            if (res != null) {
+                this.interfaz.modelTable.removeRow(this.interfaz.tabla.getSelectedRow());
+                this.interfaz.tabla.clearSelection();
+            }
         } else if (e.getSource() == this.interfaz.diselect) {
-
+            this.interfaz.clearFields();
+            this.interfaz.tabla.clearSelection();
+            this.interfaz.diselect.setEnabled(false);
+            this.interfaz.removeFile.setEnabled(false);
         } else if (e.getSource() == this.interfaz.verify) {
             String text = this.interfaz.texto.getText();
             this.funcionalidad.verifyPlagiarism(text);
@@ -99,8 +114,22 @@ public class MainController implements ListSelectionListener, ActionListener{
     public void valueChanged(ListSelectionEvent e) {
         int viewRow = this.interfaz.tabla.getSelectedRow();
         if (!e.getValueIsAdjusting() && viewRow != -1) {
-            this.interfaz.diselect.setEnabled(true);
-            this.interfaz.removeFile.setEnabled(true);
+
+            String idStr = this.interfaz.modelTable.getValueAt(viewRow, 0).toString(); // id
+            int id = Integer.parseInt(idStr);
+
+            FileDB file = this.funcionalidad.getFile(id);
+            if (file != null) {
+
+                this.interfaz.titulo.setText(file.getTitulo());
+                this.interfaz.autor.setText(file.getAutor());
+                this.interfaz.descripcion.setText(file.getDescripcion());
+                this.interfaz.textShow.setText(file.getFile().text);
+
+                this.interfaz.diselect.setEnabled(true);
+                this.interfaz.removeFile.setEnabled(true);
+            }
+            
         }
     }
 
