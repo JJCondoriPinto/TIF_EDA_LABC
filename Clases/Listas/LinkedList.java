@@ -67,6 +67,18 @@ public class LinkedList<E> {
         return aux.getData();
     }
 
+    public E get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Índice fuera de los límites");
+        }
+
+        Node<E> aux = root;
+        for (int i = 0; i < index; i++) {
+            aux = aux.getNext();
+        }
+        return aux.getData();
+    }
+    
     public boolean isEmpty() {
         return this.size == 0;
     }
