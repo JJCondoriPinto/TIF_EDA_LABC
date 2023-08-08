@@ -44,6 +44,7 @@ public class LinkedList<E> {
             throw new ListEmptyException("Lista vacía");
         else {
             Node<E> aux = this.getRoot();
+            this.size--;
             if (!aux.getData().equals(data)) {
                 while (aux != null) {
                     if (aux.hasNext() && aux.getNext().getData().equals(data))
@@ -53,7 +54,6 @@ public class LinkedList<E> {
                 if (aux == null) throw new NotFoundException("Elemento no encontrado");
                 Node<E> item = aux.getNext();
                 aux.setNext(item.getNext());
-                this.size--;
                 this.updateLast();
                 return item.getData();
             } else {
