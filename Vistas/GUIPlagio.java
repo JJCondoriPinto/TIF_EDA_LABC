@@ -80,7 +80,11 @@ public class GUIPlagio extends JFrame {
         plagioPanel.setBorder(new TitledBorder("Resultados de detección"));
         plagioPanel.setBounds(400, 150, 170, 380);
 
-
+        this.plagioResultTextArea = new JTextArea();
+        this.plagioResultTextArea.setEditable(false);
+        JScrollPane scrollPlagioResult = new JScrollPane(this.plagioResultTextArea);
+        plagioPanel.add(scrollPlagioResult);
+        scrollPlagioResult.setBounds(10, 20, 150, 300);
         
         principal.add(textoPanel);
         principal.add(actionsPanel);
