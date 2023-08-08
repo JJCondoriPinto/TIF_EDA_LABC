@@ -145,6 +145,7 @@ public class MainController implements ListSelectionListener, ActionListener{
                                  .append("\nAutor:  ").append(file.getAutor())
                                  .append("\n\n");
                 }
+                this.interfaz.plagioResultTextArea.setText(plagioDetails.toString());
 
             }
         }
