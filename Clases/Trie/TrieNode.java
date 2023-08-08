@@ -1,11 +1,13 @@
 package Clases.Trie;
 
 class TrieNode {
-    TrieNode[] children;  // Un arreglo de nodos hijos
-    boolean isEndOfWord;  // Indica si este nodo representa el final de una palabra
+    TrieNode[] children;
+    boolean isEndOfWord; 
+    int wordIndex;  // Índice de posición de la palabra
     
     public TrieNode() {
         children = new TrieNode[27];  // Tamaño de 27 para las 26 letras del abecedario más un carácter especial
         isEndOfWord = false;
+        wordIndex = -1;  // Valor por defecto para indicar que no se ha asignado un índice
     }
 }
