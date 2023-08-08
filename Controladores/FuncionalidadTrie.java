@@ -1,8 +1,11 @@
 package Controladores;
 
+import java.util.ArrayList;
+
 import Clases.Exceptions.ListEmptyException;
 import Clases.Exceptions.NotFoundException;
 import Clases.Listas.LinkedList;
+import Clases.Listas.Node;
 import Clases.Plagio.FileDB;
 import Clases.Plagio.PlagiarismChecker;
 import Clases.Plagio.ResultChecker;
@@ -12,18 +15,30 @@ public class FuncionalidadTrie { // Define los tries
     
     private PlagiarismChecker checker;
     private LinkedList<FileDB> listFiles;
-    private int countId;
+    public static int countId = 0;
 
     public FuncionalidadTrie() {
         this.listFiles = new LinkedList<FileDB>(null);
         this.checker = new PlagiarismChecker(this.listFiles);
-        this.countId = 0;
+    }
+
+    public ArrayList<FileDB> getAllFiles() {
+        if (!this.listFiles.isEmpty()) {
+            ArrayList<FileDB> files = new ArrayList<>();
+            Node<FileDB> aux = this.listFiles.getRoot();
+            while(aux != null) {
+                files.add(aux.getData());
+                aux = aux.getNext();
+            }
+            return files;
+        }
+        return null;
     }
 
     public int addFileText(String text, String titulo, String autor, String descripcion) {
-        FileDB file = new FileDB(new Trie(text), titulo, autor, descripcion, this.countId);
+        FileDB file = new FileDB(new Trie(text), titulo, autor, descripcion, countId);
         this.listFiles.add(file);
-        return this.countId++;
+        return countId++;
     }
 
     public ResultChecker verifyPlagiarism(String text) {

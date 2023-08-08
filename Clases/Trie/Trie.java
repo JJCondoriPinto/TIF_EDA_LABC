@@ -3,12 +3,10 @@ package Clases.Trie;
 public class Trie {
     private TrieNode root;
     private int currentIndex; // Índice actual para asignar a las palabras
-    public String text;
 
     public Trie() {
         root = new TrieNode();
         currentIndex = 0;
-        text = "";
     }
 
     public Trie(String text) {
@@ -20,9 +18,15 @@ public class Trie {
         String[] words = text.split("\\s+");
 
         for (String word : words) {
-            insert(word.toLowerCase(), currentIndex);
-            currentIndex++;
+            word = word.replaceAll("[^a-zA-Z]", "");
+            insert(word.toLowerCase(), currentIndex++);
         }
+    }
+
+    public void insert(String word) {
+        word = word.replaceAll("[^a-zA-Z]", "");
+        System.out.println(word);
+        this.insert(word, ++currentIndex);
     }
 
     public void insert(String word, int index) {
@@ -38,23 +42,17 @@ public class Trie {
         node.wordIndex = index;
     }
 
-    public boolean search(String word, int startIndex) {
-        if (startIndex < 0 || startIndex >= text.length()) {
-            return false; // startIndex fuera de los límites de la cadena
-        }
-    
+    public TrieNode search(String word) {
         TrieNode node = root;
-        int endIndex = Math.min(startIndex + word.length(), text.length());
-    
-        for (int i = startIndex; i < endIndex; i++) {
-            char c = text.charAt(i); // Obtener el carácter en la posición i del texto
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.toLowerCase().charAt(i); // Obtener el carácter en la posición i del texto
             int charIndex = c - 'a';
             if (node.children[charIndex] == null) {
-                return false;
+                return null;
             }
             node = node.children[charIndex];
         }
-        return node.isEndOfWord;
+        return node.isEndOfWord ? node : null;
     }    
     
     public boolean startsWith(String prefix) {

@@ -39,6 +39,16 @@ public class MainController implements ListSelectionListener, ActionListener{
         this.interfaz.tabla.getSelectionModel().addListSelectionListener(this);
     }
 
+    private void showFilesTable() {
+        while (this.interfaz.modelTable.getRowCount() > 0)
+            this.interfaz.modelTable.removeRow(this.interfaz.modelTable.getRowCount()-1);
+
+        for(FileDB file : this.funcionalidad.getAllFiles()) {
+            String[] row = new String[]{Integer.toString(file.getId()), file.getTitulo(), file.getAutor()};
+            this.interfaz.modelTable.addRow(row);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.interfaz.addTextDb) {
@@ -85,7 +95,9 @@ public class MainController implements ListSelectionListener, ActionListener{
                     paths[i++] = path;
                 }
 
-                this.funcionalidad.loadFiles(paths);
+                if (this.funcionalidad.loadFiles(paths)) {
+                    this.showFilesTable();
+                }
                 
             }
         } else if (e.getSource() == this.interfaz.removeFile) {
@@ -124,7 +136,7 @@ public class MainController implements ListSelectionListener, ActionListener{
                 this.interfaz.titulo.setText(file.getTitulo());
                 this.interfaz.autor.setText(file.getAutor());
                 this.interfaz.descripcion.setText(file.getDescripcion());
-                this.interfaz.textShow.setText(file.getFile().text);
+                this.interfaz.textShow.setText(file.getFile().toString());
 
                 this.interfaz.diselect.setEnabled(true);
                 this.interfaz.removeFile.setEnabled(true);
