@@ -39,7 +39,7 @@ public class Trie {
             node = node.children[charIndex];
         }
         node.isEndOfWord = true;
-        node.wordIndex = index;
+        node.setIndex(index);
     }
 
     public TrieNode search(String word) {

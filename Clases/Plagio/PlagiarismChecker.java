@@ -1,18 +1,21 @@
 package Clases.Plagio;
 
 import Clases.Listas.LinkedList;
+import Clases.Listas.Node;
 import Clases.Trie.Trie;
+import Clases.Trie.TrieNode;
 import Controladores.FuncionalidadTrie;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PlagiarismChecker {
 
+    public static final int UMBRAL_SEPARACION_PALABRAS = 3;
+    public static final float UMBRAL_PORCENTAJE_COINCIDENCIA = 0.40f;
     private LinkedList<FileDB> tries;
 
     public PlagiarismChecker(LinkedList<FileDB> tries) {
@@ -58,22 +61,39 @@ public class PlagiarismChecker {
     }
 
     public ResultChecker verifyPlagiarism(String text) {
-        ResultChecker resultChecker = new ResultChecker(text);
+        ResultChecker resultChecker = new ResultChecker(text, this.tries.size());
         String[] words = text.split("\\s+");
-        System.out.println(Arrays.toString(words));
-        // for (int i = 0; i < tries.size(); i++) {
-        //     FileDB fileDB = tries.get(i);
-        //     Trie trie = fileDB.getFile();
-            
-        //     for (int j = 0; j < words.length; j++) {
-        //         String word = words[j];
-        //         if (trie.search(word, j)) {
-        //             int startIndex = j;
-        //             int endIndex = j + word.length() - 1;
-        //             resultChecker.addMatch(startIndex, endIndex);
-        //         }
-        //     }
-        // }
+        boolean[] coincidencias = new boolean[words.length];
+        int lengthWord = 0;
+        for(int i = 0; i < words.length; i++) {
+            Node<FileDB> aux = this.tries.getRoot();
+            int index = 0;
+            while(aux != null) { // Recorremos todos los tries en busqueda de coincidencias
+                FileDB file = aux.getData();
+                Trie trie = file.getFile();
+                TrieNode match = trie.search(words[i]);
+                if (match != null) { // Encontró la palabra
+                    resultChecker.addMatch(index, lengthWord, lengthWord+words[i].length()-1, this.tries.get(index));
+                    int indexWord = match.getIndex(); // Posicion en texto de trie
+                    int indexCurrent = resultChecker.getMatch(index).getIndexCoincidencia();
+                    // Coincidencia valida
+                    if (indexCurrent == -1 || (indexWord - indexCurrent <= UMBRAL_SEPARACION_PALABRAS && indexWord - indexCurrent > 0)) {
+                        resultChecker.coincidente(index, indexWord); // +1 coincidencia en el file
+                        resultChecker.getMatch(index).setEndIndex(resultChecker.getMatch(index).getEndIndex()+words[i].length());
+                        coincidencias[i] = true;
+                    }
+                }
+                aux = aux.getNext();
+                index++;
+            }
+            lengthWord += words[i].length()+1;
+        }
+        int coincidenciasTotal = 0;
+        for (boolean bool : coincidencias)
+            coincidenciasTotal += bool ? 1 : 0;
+
+        if (coincidenciasTotal*1.0 / words.length < UMBRAL_PORCENTAJE_COINCIDENCIA)
+            return null;
         return resultChecker;
     }
 }

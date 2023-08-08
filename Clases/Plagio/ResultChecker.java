@@ -1,25 +1,34 @@
 package Clases.Plagio;
-import Clases.Listas.*;
 
 public class ResultChecker {
     private String originalText;
-    private LinkedList<Match> matches;
+    private Match[] matches;
 
-    public ResultChecker(String originalText) {
+    public ResultChecker(String originalText, int longFiles) {
         this.originalText = originalText;
-        matches = new LinkedList<>(null);
+        matches = new Match[longFiles];
     }
 
-    public void addMatch(int startIndex, int endIndex) {
-        matches.add(new Match(startIndex, endIndex));
+    public void addMatch(int index, int startIndex, int endIndex, FileDB file) {
+        if (this.matches[index] == null)
+            this.matches[index] = new Match(startIndex, endIndex, file);
+    }
+
+    public Match getMatch(int index) {
+        return this.matches[index];
+    }
+
+    public void coincidente(int posFile, int indexWord) {
+        this.matches[posFile].addCoincidencia();
+        this.matches[posFile].setIndexCoincidencia(indexWord);
     }
 
     public String getOriginalText() {
         return originalText;
     }
 
-    public LinkedList<Match> getMatches() {
-        return matches;
+    public Match[] getMatches() {
+        return this.matches;
     }
 }
 

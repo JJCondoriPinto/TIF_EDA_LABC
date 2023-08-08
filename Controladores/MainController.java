@@ -12,6 +12,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import Clases.Plagio.FileDB;
+import Clases.Plagio.Match;
+import Clases.Plagio.ResultChecker;
 import Vistas.GUIPlagio;
 
 public class MainController implements ListSelectionListener, ActionListener{
@@ -115,7 +117,14 @@ public class MainController implements ListSelectionListener, ActionListener{
             this.interfaz.removeFile.setEnabled(false);
         } else if (e.getSource() == this.interfaz.verify) {
             String text = this.interfaz.texto.getText();
-            this.funcionalidad.verifyPlagiarism(text);
+            ResultChecker res = this.funcionalidad.verifyPlagiarism(text);
+            if (res != null) {
+                Match matchMax = res.getMatches()[0];
+                for(Match match : res.getMatches()) {
+                    if (match.getCoincidencias() > matchMax.getCoincidencias())
+                        matchMax = match;
+                }
+            }
 
         } else if (e.getSource() == this.interfaz.clearText) {
             this.interfaz.texto.setText("");
