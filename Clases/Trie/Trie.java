@@ -38,9 +38,10 @@ public class Trie {
         node.wordIndex = index;
     }
 
-    public boolean search(String word) {
+    public boolean search(String word, int startIndex) {
         TrieNode node = root;
-        for (char c : word.toCharArray()) {
+        for (int i = startIndex; i < startIndex + word.length(); i++) {
+            char c = text.charAt(i); // Obtener el carácter en la posición i del texto
             int charIndex = c - 'a';
             if (node.children[charIndex] == null) {
                 return false;
@@ -49,7 +50,7 @@ public class Trie {
         }
         return node.isEndOfWord;
     }
-
+    
     public boolean startsWith(String prefix) {
         TrieNode node = root;
         for (char c : prefix.toCharArray()) {
