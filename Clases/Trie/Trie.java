@@ -3,10 +3,17 @@ package Clases.Trie;
 public class Trie {
     private TrieNode root;
     private int currentIndex; // Índice actual para asignar a las palabras
+    public String text;
 
     public Trie() {
         root = new TrieNode();
         currentIndex = 0;
+        text = "";
+    }
+
+    public Trie(String text) {
+        this();
+        insertText(text);
     }
 
     public void insertText(String text) {
