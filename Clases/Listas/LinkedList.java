@@ -5,10 +5,12 @@ import Clases.Exceptions.NotFoundException;
 
 public class LinkedList<E> {
     private Node<E> root;
+    private Node<E> last;
     private int size;
 
     public LinkedList(Node<E> root) {
         this.root = root;
+        this.last = root;
     }
 
     public Node<E> getRoot() {
@@ -24,14 +26,16 @@ public class LinkedList<E> {
     }
 
     public void add(E data) {
+        Node<E> node = new Node<E>(data);
         if (this.isEmpty()) {
-            this.setRoot(new Node<E>(data));
+            this.setRoot(node);
         } else {
             Node<E> aux = this.getRoot();
             while (aux.hasNext()) 
                 aux = aux.getNext();
-            aux.setNext(new Node<E>(data));
+            aux.setNext(node);
         }
+        this.updateLast();
         this.size++;
     }
 
@@ -50,13 +54,27 @@ public class LinkedList<E> {
                 Node<E> item = aux.getNext();
                 aux.setNext(item.getNext());
                 this.size--;
+                this.updateLast();
                 return item.getData();
             } else {
                 E dataRem = aux.getData();
                 this.root = aux.getNext();
+                this.updateLast();
                 return dataRem;
             }
         }
+    }
+
+    private void updateLast() {
+        Node<E> aux = this.getRoot();
+        while(aux != null) {
+            this.last = aux;
+            aux = aux.getNext();
+        }
+    }
+
+    public E getLast() {
+        return this.last != null ? this.last.getData() : null;
     }
 
     public E getItem(E data) throws NotFoundException{

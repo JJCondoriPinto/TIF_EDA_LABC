@@ -51,7 +51,6 @@ public class FuncionalidadTrie { // Define los tries
 
     public FileDB getFile(int id) {
         try {
-            System.out.println(id);
             FileDB file = this.listFiles.getItem(new FileDB(id));
             return file;
         } catch (NotFoundException err) {

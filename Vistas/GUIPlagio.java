@@ -14,7 +14,6 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-
 public class GUIPlagio extends JFrame {
     
     public JTextArea texto;
@@ -63,10 +62,10 @@ public class GUIPlagio extends JFrame {
         textoPanel.setBounds(10, 10, 380, 520);
         
         texto = new JTextArea();
+        texto.setMargin(new Insets(10, 10, 10, 10));
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
-        texto.setMargin(new Insets(10, 10, 10, 10));
-        
+
         JScrollPane scrollText = new JScrollPane(texto);
         textoPanel.add(scrollText);
         scrollText.setBounds(10, 20, 360, 490);

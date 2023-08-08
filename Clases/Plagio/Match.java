@@ -1,17 +1,16 @@
 package Clases.Plagio;
 
+import Clases.Listas.LinkedList;
+
 public class Match {
     private FileDB fileMatching;
     private int numCouncidencias;
-    private int indexCoincidencia; // Posicion de palabra de última coincidencia
-    private int startIndex; // Índice de inicio de la coincidencia en el texto original
-    private int endIndex;   // Índice de fin de la coincidencia en el texto original
+    private LinkedList<BlockMatch> matches;
 
     public Match(int startIndex, int endIndex, FileDB file) {
-        this.indexCoincidencia = -1;
         this.numCouncidencias = 0;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
+        this.matches = new LinkedList<>(null);
+        this.matches.add(new BlockMatch(-1, startIndex, endIndex));
         this.fileMatching = file;
     }
 
@@ -19,16 +18,28 @@ public class Match {
         this.fileMatching = file;
     }
 
+    public void addBlock(int startIndex, int endIndex) {
+        this.matches.add(new BlockMatch(-1, startIndex, endIndex));
+    }
+
+    public LinkedList<BlockMatch> getListBlocks() {
+        return this.matches;
+    }
+
+    public BlockMatch getLastBlock() {
+        return this.matches.getLast();
+    }
+
     public FileDB getFile() {
         return this.fileMatching;
     }
 
     public int getIndexCoincidencia() {
-        return this.indexCoincidencia;
+        return this.matches.getLast().getIndexCoincidencia();
     }
 
     public void setIndexCoincidencia(int index) {
-        this.indexCoincidencia = index;
+        this.matches.getLast().setIndexCoincidencia(index);
     }
 
     public void addCoincidencia() {
@@ -40,19 +51,19 @@ public class Match {
     }
 
     public int getStartIndex() {
-        return startIndex;
+        return this.matches.getLast().getIndexStart();
     }
 
     public int getEndIndex() {
-        return endIndex;
+        return this.matches.getLast().getIndexEnd();
     }
 
     public void setStartIndex(int index) {
-        this.startIndex = index;
+        this.matches.getLast().setIndexStart(index);
     }
 
     public void setEndIndex(int index) {
-        this.endIndex = index;
+        this.matches.getLast().setIndexEnd(index);
     }
 }
 

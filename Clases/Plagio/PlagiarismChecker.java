@@ -66,6 +66,7 @@ public class PlagiarismChecker {
         boolean[] coincidencias = new boolean[words.length];
         int lengthWord = 0;
         for(int i = 0; i < words.length; i++) {
+            lengthWord += words[i].length()+1;
             Node<FileDB> aux = this.tries.getRoot();
             int index = 0;
             while(aux != null) { // Recorremos todos los tries en busqueda de coincidencias
@@ -73,20 +74,24 @@ public class PlagiarismChecker {
                 Trie trie = file.getFile();
                 TrieNode match = trie.search(words[i]);
                 if (match != null) { // Encontró la palabra
-                    resultChecker.addMatch(index, lengthWord, lengthWord+words[i].length()-1, this.tries.get(index));
-                    int indexWord = match.getIndex(); // Posicion en texto de trie
+                    resultChecker.addMatch(index, lengthWord - words[i].length()-1, lengthWord, this.tries.get(index));
                     int indexCurrent = resultChecker.getMatch(index).getIndexCoincidencia();
+                    int indexWord = match.getIndexFirst(indexCurrent); // Posicion en texto de trie
                     // Coincidencia valida
                     if (indexCurrent == -1 || (indexWord - indexCurrent <= UMBRAL_SEPARACION_PALABRAS && indexWord - indexCurrent > 0)) {
                         resultChecker.coincidente(index, indexWord); // +1 coincidencia en el file
-                        resultChecker.getMatch(index).setEndIndex(resultChecker.getMatch(index).getEndIndex()+words[i].length());
+                        resultChecker.getMatch(index).setEndIndex(lengthWord);
                         coincidencias[i] = true;
+                    }
+                    // Si es una coincidencia no valida se separa otro bloque para nuevas coincidencias
+                    else {
+                        resultChecker.getMatch(index).addBlock(lengthWord-words[i].length()-1, indexCurrent);
+                        continue;
                     }
                 }
                 aux = aux.getNext();
                 index++;
             }
-            lengthWord += words[i].length()+1;
         }
         int coincidenciasTotal = 0;
         for (boolean bool : coincidencias)

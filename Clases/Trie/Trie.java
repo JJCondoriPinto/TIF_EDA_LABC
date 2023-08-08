@@ -18,14 +18,15 @@ public class Trie {
         String[] words = text.split("\\s+");
 
         for (String word : words) {
+            word = word.replaceAll("\\p{M}", "");
             word = word.replaceAll("[^a-zA-Z]", "");
             insert(word.toLowerCase(), currentIndex++);
         }
     }
 
     public void insert(String word) {
+        word = word.replaceAll("\\p{M}", "");
         word = word.replaceAll("[^a-zA-Z]", "");
-        System.out.println(word);
         this.insert(word, ++currentIndex);
     }
 
@@ -44,6 +45,8 @@ public class Trie {
 
     public TrieNode search(String word) {
         TrieNode node = root;
+        word = word.replaceAll("\\p{M}", "");
+        word = word.replaceAll("[^a-zA-Z]", "");
         for (int i = 0; i < word.length(); i++) {
             char c = word.toLowerCase().charAt(i); // Obtener el carácter en la posición i del texto
             int charIndex = c - 'a';

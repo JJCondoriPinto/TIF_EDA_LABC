@@ -11,6 +11,8 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import Clases.Listas.Node;
+import Clases.Plagio.BlockMatch;
 import Clases.Plagio.FileDB;
 import Clases.Plagio.Match;
 import Clases.Plagio.ResultChecker;
@@ -123,6 +125,15 @@ public class MainController implements ListSelectionListener, ActionListener{
                 for(Match match : res.getMatches()) {
                     if (match.getCoincidencias() > matchMax.getCoincidencias())
                         matchMax = match;
+                }
+                Node<BlockMatch> bloques = matchMax.getListBlocks().getRoot();
+                int aux = 0;
+                while(bloques != null) {
+                    String strCopy = text.substring(bloques.getData().getIndexStart()+aux, bloques.getData().getIndexEnd()-1+aux);
+                    text = text.replaceAll(strCopy, ">"+strCopy+"<");
+                    bloques = bloques.getNext();
+                    this.interfaz.texto.setText(text);
+                    aux += 2;
                 }
             }
 
