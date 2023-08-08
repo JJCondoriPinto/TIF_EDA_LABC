@@ -34,9 +34,24 @@ public class PlagiarismChecker {
     }
 
     public ResultChecker verifyPlagiarism(String text) {
-        return null;
+        ResultChecker resultChecker = new ResultChecker(text);
+        String[] words = text.split("\\s+");
+        
+        for (int i = 0; i < tries.size(); i++) {
+            FileDB fileDB = tries.get(i);
+            Trie trie = fileDB.getFile();
+            int currentIndex = 0;
+                
+            for (String word : words) {
+                if (trie.search(word, currentIndex)) {
+                    int startIndex = currentIndex;
+                    int endIndex = currentIndex + word.length() - 1;
+                    resultChecker.addMatch(startIndex, endIndex);
+                }
+                currentIndex += word.length() + 1; // Considerar el espacio entre palabras
+            }
+        }
+
+        return resultChecker;
     }
-
-
-
 }
