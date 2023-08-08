@@ -4,11 +4,13 @@ import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,6 +21,7 @@ public class GUIPlagio extends JFrame {
     public JTextArea textShow;
     public JButton addTextDb;
     public JButton addTextDbFile;
+    public JButton loadFileText;
     public JButton removeFile;
     public JButton diselect;
 
@@ -27,6 +30,11 @@ public class GUIPlagio extends JFrame {
 
     public DefaultTableModel modelTable;
     public JTable tabla;
+
+    // Campos para inserción de texto
+    public JTextField titulo;
+    public JTextField autor;
+    public JTextArea descripcion;
 
     public GUIPlagio() {
 
@@ -51,7 +59,7 @@ public class GUIPlagio extends JFrame {
         principal.setLayout(null);
         JPanel textoPanel = new JPanel();
         textoPanel.setLayout(null);
-        textoPanel.setBorder(new TitledBorder("TextoPanel a analizar"));
+        textoPanel.setBorder(new TitledBorder("Texto a analizar"));
         textoPanel.setBounds(10, 10, 380, 520);
         
         texto = new JTextArea();
@@ -65,11 +73,11 @@ public class GUIPlagio extends JFrame {
         
         JPanel actionsPanel = new JPanel();
         actionsPanel.setBorder(new TitledBorder("Acciones"));
-        actionsPanel.setBounds(400, 10, 170, 100);
+        actionsPanel.setBounds(400, 10, 170, 140);
         
         JPanel plagioPanel = new JPanel();
         plagioPanel.setBorder(new TitledBorder("Resultados de detección"));
-        plagioPanel.setBounds(400, 110, 170, 420);
+        plagioPanel.setBounds(400, 150, 170, 380);
         
 
         principal.add(textoPanel);
@@ -86,7 +94,7 @@ public class GUIPlagio extends JFrame {
         actions2.setBounds(10, 10, 170, 200);
 
         this.addTextDb = new JButton("Añadir texto");
-        this.addTextDbFile = new JButton("Añadir desde archivo");
+        this.addTextDbFile = new JButton("Cargar archivo");
         this.removeFile = new JButton("Eliminar texto");
         this.diselect = new JButton("Deseleccionar");
 
@@ -110,7 +118,7 @@ public class GUIPlagio extends JFrame {
         tablePanel.setBounds(190, 10, 380, 200);
 
         this.modelTable = new DefaultTableModel();
-        modelTable.setColumnIdentifiers(new String[]{"ID","Nombre de archivo", "Direccion"});
+        modelTable.setColumnIdentifiers(new String[]{"ID","Titulo","Autor"});
         this.tabla = new JTable(modelTable);
         JScrollPane scrollTable = new JScrollPane(tabla);
 
@@ -118,7 +126,7 @@ public class GUIPlagio extends JFrame {
         textPanelShow.setLayout(null);
         textPanelShow.setBorder(new TitledBorder("Vista de texto"));
         secundario.add(textPanelShow);
-        textPanelShow.setBounds(10, 210, 560, 320);
+        textPanelShow.setBounds(190, 210, 380, 320);
 
         this.textShow = new JTextArea();
         this.textShow.setMargin(new Insets(10, 10, 10, 10));
@@ -126,10 +134,45 @@ public class GUIPlagio extends JFrame {
         this.textShow.setWrapStyleWord(true);
         JScrollPane scrollTextShow = new JScrollPane(this.textShow);
         textPanelShow.add(scrollTextShow);
-        scrollTextShow.setBounds(10, 25, 540, 285);
+        scrollTextShow.setBounds(10, 25, 360, 285);
         
         tablePanel.add(scrollTable);
         scrollTable.setBounds(10, 20, 360, 170);
+
+        JPanel fieldsPanel = new JPanel();
+        fieldsPanel.setBorder(new TitledBorder("Información de texto"));
+        fieldsPanel.setBounds(10, 210, 170, 320);
+        secundario.add(fieldsPanel);
+        fieldsPanel.setLayout(null);
+
+        JLabel label1 = new JLabel("Titulo");
+        JLabel label2 = new JLabel("Autor");
+        JLabel label3 = new JLabel("Descripcion");
+
+        this.titulo = new JTextField();
+        this.autor = new JTextField();
+        this.descripcion = new JTextArea();
+
+        fieldsPanel.add(this.titulo);
+        fieldsPanel.add(this.autor);
+        
+        label1.setBounds(10, 20, 150, 20);
+        this.titulo.setBounds(10, 40, 150, 25);
+        
+        label2.setBounds(10, 80, 150, 20);
+        this.autor.setBounds(10, 100, 150, 25);
+        
+        label3.setBounds(10, 140, 150, 20);
+        JScrollPane scrollDescription = new JScrollPane(this.descripcion);
+        this.descripcion.setMargin(new Insets(5, 5, 5, 5));
+        this.descripcion.setLineWrap(true);
+        this.descripcion.setWrapStyleWord(true);
+        scrollDescription.setBounds(10, 160, 150, 150);
+        
+        fieldsPanel.add(scrollDescription);
+        fieldsPanel.add(label1);
+        fieldsPanel.add(label2);
+        fieldsPanel.add(label3);
 
         panel.addTab("Detector de plagio", principal);
         panel.addTab("Base de datos", secundario);
@@ -141,12 +184,16 @@ public class GUIPlagio extends JFrame {
         panel.setLayout(null);
 
         this.verify = new JButton("Analizar");
-        verify.setBounds(10, 20, 150, 30);
+        this.verify.setBounds(10, 20, 150, 30);
+        
+        this.loadFileText = new JButton("Cargar archivo");
+        this.loadFileText.setBounds(10, 60, 150, 30);
         
         this.clearText = new JButton("Limpiar");
-        clearText.setBounds(10, 60, 150, 30);
+        this.clearText.setBounds(10, 100, 150, 30);
 
         panel.add(this.verify);
+        panel.add(this.loadFileText);
         panel.add(this.clearText);
     }
 }
