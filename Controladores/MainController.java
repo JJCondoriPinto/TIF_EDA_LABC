@@ -120,22 +120,34 @@ public class MainController implements ListSelectionListener, ActionListener{
         } else if (e.getSource() == this.interfaz.verify) {
             String text = this.interfaz.texto.getText();
             ResultChecker res = this.funcionalidad.verifyPlagiarism(text);
-            if (res != null) {
+            if (res != null && res.getMatches() != null && res.getMatches().length > 0) {
                 Match matchMax = res.getMatches()[0];
-                for(Match match : res.getMatches()) {
-                    if (match.getCoincidencias() > matchMax.getCoincidencias())
+                for (Match match : res.getMatches()) {
+                    if (match != null && match.getCoincidencias() > matchMax.getCoincidencias())
                         matchMax = match;
                 }
-                Node<BlockMatch> bloques = matchMax.getListBlocks().getRoot();
-                int aux = 0;
-                while(bloques != null) {
+                if (matchMax != null && matchMax.getListBlocks() != null) {
+                    Node<BlockMatch> bloques = matchMax.getListBlocks().getRoot();
+                    int aux = 0;
+                    while (bloques != null) {
                     String strCopy = text.substring(bloques.getData().getIndexStart()+aux, bloques.getData().getIndexEnd()-1+aux);
                     text = text.replaceAll(strCopy, ">"+strCopy+"<");
                     bloques = bloques.getNext();
                     this.interfaz.texto.setText(text);
                     aux += 2;
                 }
+
+                StringBuilder plagioDetails = new StringBuilder("Archivos con plagio:\n");
+                for (Match match : res.getMatches()) {
+                    FileDB file = match.getFile();
+                    plagioDetails.append("ID:     ").append(file.getId())
+                                 .append("\nTítulo: ").append(file.getTitulo())
+                                 .append("\nAutor:  ").append(file.getAutor())
+                                 .append("\n\n");
+                }
+
             }
+        }
 
         } else if (e.getSource() == this.interfaz.clearText) {
             this.interfaz.texto.setText("");

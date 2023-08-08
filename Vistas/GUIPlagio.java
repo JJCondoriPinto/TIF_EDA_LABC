@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class GUIPlagio extends JFrame {
     
+    public JTextArea plagioResultTextArea;
     public JTextArea texto;
     public JTextArea textShow;
     public JButton addTextDb;
@@ -74,11 +75,13 @@ public class GUIPlagio extends JFrame {
         actionsPanel.setBorder(new TitledBorder("Acciones"));
         actionsPanel.setBounds(400, 10, 170, 140);
         
+
         JPanel plagioPanel = new JPanel();
         plagioPanel.setBorder(new TitledBorder("Resultados de detección"));
         plagioPanel.setBounds(400, 150, 170, 380);
-        
 
+
+        
         principal.add(textoPanel);
         principal.add(actionsPanel);
         principal.add(plagioPanel);
