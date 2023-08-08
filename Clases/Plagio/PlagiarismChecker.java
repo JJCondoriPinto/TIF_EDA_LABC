@@ -8,13 +8,14 @@ import Controladores.FuncionalidadTrie;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PlagiarismChecker {
 
-    public static final int UMBRAL_SEPARACION_PALABRAS = 3;
+    public static final int UMBRAL_SEPARACION_PALABRAS = 1;
     public static final float UMBRAL_PORCENTAJE_COINCIDENCIA = 0.40f;
     private LinkedList<FileDB> tries;
 
@@ -78,6 +79,9 @@ public class PlagiarismChecker {
                     int indexCurrent = resultChecker.getMatch(index).getIndexCoincidencia();
                     int indexWord = match.getIndexFirst(indexCurrent); // Posicion en texto de trie
                     // Coincidencia valida
+                    System.out.println(words[i]);
+                    System.out.println(indexCurrent);
+                    System.out.println(indexWord);
                     if (indexCurrent == -1 || (indexWord - indexCurrent <= UMBRAL_SEPARACION_PALABRAS && indexWord - indexCurrent > 0)) {
                         resultChecker.coincidente(index, indexWord); // +1 coincidencia en el file
                         resultChecker.getMatch(index).setEndIndex(lengthWord);
