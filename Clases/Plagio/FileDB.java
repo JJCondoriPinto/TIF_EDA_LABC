@@ -5,6 +5,7 @@ import Clases.Trie.Trie;
 public class FileDB {
     private Trie file;
     private final int ID;
+    private String originalText; // Nuevo atributo para almacenar el texto original
     private String titulo;
     private String autor;
     private String descripcion;
@@ -25,6 +26,14 @@ public class FileDB {
         this(file, titulo, autor, "", ID);
     }
 
+    public String getOriginalText() {
+        return originalText;
+    }
+
+    public void setOriginalText(String originalText) {
+        this.originalText = originalText;
+    }
+    
     public Trie getFile() {
         return this.file;
     }

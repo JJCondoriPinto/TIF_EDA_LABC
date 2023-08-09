@@ -13,6 +13,7 @@ public class Trie {
         this();
         insertText(text);
     }
+    
 
     public void insertText(String text) {
         String[] words = text.split("\\s+");
@@ -69,4 +70,6 @@ public class Trie {
         }
         return true;
     }
+
+    
 }
