@@ -123,32 +123,36 @@ public class MainController implements ListSelectionListener, ActionListener{
             if (res != null && res.getMatches() != null && res.getMatches().length > 0) {
                 Match matchMax = res.getMatches()[0];
                 for (Match match : res.getMatches()) {
-                    if (match != null && match.getCoincidencias() > matchMax.getCoincidencias())
+                    if (match != null && match.getCoincidencias() > (matchMax != null ? matchMax.getCoincidencias() : 0)) {
                         matchMax = match;
+                    }
                 }
                 if (matchMax != null && matchMax.getListBlocks() != null) {
                     Node<BlockMatch> bloques = matchMax.getListBlocks().getRoot();
                     int aux = 0;
                     while (bloques != null) {
-                    String strCopy = text.substring(bloques.getData().getIndexStart()+aux, bloques.getData().getIndexEnd()-1+aux);
-                    text = text.replaceAll(strCopy, ">"+strCopy+"<");
-                    bloques = bloques.getNext();
-                    this.interfaz.texto.setText(text);
-                    aux += 2;
+                        String strCopy = text.substring(bloques.getData().getIndexStart() + aux, bloques.getData().getIndexEnd() - 1 + aux);
+                        text = text.replaceAll(strCopy, ">" + strCopy + "<");
+                        bloques = bloques.getNext();
+                        this.interfaz.texto.setText(text);
+                        aux += 2;
+                    }
+            
+                    StringBuilder plagioDetails = new StringBuilder("Archivos con plagio:\n");
+                    for (Match match : res.getMatches()) {
+                        if (match != null) {
+                            FileDB file = match.getFile();
+                            if (file != null) {
+                                plagioDetails.append("ID:     ").append(file.getId())
+                                        .append("\nTítulo: ").append(file.getTitulo())
+                                        .append("\nAutor:  ").append(file.getAutor())
+                                        .append("\n\n");
+                            }
+                        }
+                    }
+                    this.interfaz.plagioResultTextArea.setText(plagioDetails.toString());
                 }
-
-                StringBuilder plagioDetails = new StringBuilder("Archivos con plagio:\n");
-                for (Match match : res.getMatches()) {
-                    FileDB file = match.getFile();
-                    plagioDetails.append("ID:     ").append(file.getId())
-                                 .append("\nTítulo: ").append(file.getTitulo())
-                                 .append("\nAutor:  ").append(file.getAutor())
-                                 .append("\n\n");
-                }
-                this.interfaz.plagioResultTextArea.setText(plagioDetails.toString());
-
             }
-        }
 
         } else if (e.getSource() == this.interfaz.clearText) {
             this.interfaz.texto.setText("");
@@ -156,27 +160,27 @@ public class MainController implements ListSelectionListener, ActionListener{
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e) {
-        int viewRow = this.interfaz.tabla.getSelectedRow();
-        if (!e.getValueIsAdjusting() && viewRow != -1) {
+public void valueChanged(ListSelectionEvent e) {
+    int viewRow = this.interfaz.tabla.getSelectedRow();
+    if (!e.getValueIsAdjusting() && viewRow != -1) {
 
-            String idStr = this.interfaz.modelTable.getValueAt(viewRow, 0).toString(); // id
-            int id = Integer.parseInt(idStr);
+        String idStr = this.interfaz.modelTable.getValueAt(viewRow, 0).toString();
+        int id = Integer.parseInt(idStr);
 
-            FileDB file = this.funcionalidad.getFile(id);
-            if (file != null) {
+        FileDB file = this.funcionalidad.getFile(id);
+        if (file != null) {
 
-                this.interfaz.titulo.setText(file.getTitulo());
-                this.interfaz.autor.setText(file.getAutor());
-                this.interfaz.descripcion.setText(file.getDescripcion());
-                this.interfaz.textShow.setText(file.getFile().toString());
+            this.interfaz.titulo.setText(file.getTitulo());
+            this.interfaz.autor.setText(file.getAutor());
+            this.interfaz.descripcion.setText(file.getDescripcion());
+            this.interfaz.textShow.setText(file.getOriginalText()); // Mostrar el texto original
 
-                this.interfaz.diselect.setEnabled(true);
-                this.interfaz.removeFile.setEnabled(true);
-            }
-            
+            this.interfaz.diselect.setEnabled(true);
+            this.interfaz.removeFile.setEnabled(true);
         }
     }
+}
+
 
     public static void main(String[] args) {
         new MainController();
