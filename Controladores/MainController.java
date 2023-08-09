@@ -130,7 +130,10 @@ public class MainController implements ListSelectionListener, ActionListener{
                 int aux = 0;
                 while(bloques != null) {
                     String strCopy = text.substring(bloques.getData().getIndexStart()+aux, bloques.getData().getIndexEnd()-1+aux);
-                    text = text.replaceAll(strCopy, ">"+strCopy+"<");
+                    System.out.println(strCopy);
+                    String prefix = text.substring(0, bloques.getData().getIndexStart()+aux);
+                    String postfix = text.substring(bloques.getData().getIndexEnd()+aux-1, text.length());
+                    text = prefix + ">" + strCopy + "<" + postfix;
                     bloques = bloques.getNext();
                     this.interfaz.texto.setText(text);
                     aux += 2;
