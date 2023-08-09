@@ -33,6 +33,7 @@ public class PlagiarismChecker {
                 Pattern pattern1 = Pattern.compile(regexPattern1);
                 Pattern pattern2 = Pattern.compile(regexPattern2);
                 String titulo = "", autor = "";
+                String text = "";
                 while(sc.hasNext()) {
                     String word = sc.nextLine();
                     if (titulo.equals("")) {
@@ -48,9 +49,11 @@ public class PlagiarismChecker {
                         continue;
                     }
                     trie.insertText(word);
+                    text += word;
                 }
                 FileDB fileDb = new FileDB(trie, titulo, autor, FuncionalidadTrie.countId++);
                 this.tries.add(fileDb);
+                fileDb.setOriginalText(text);
                 sc.close();
             }
             return true;

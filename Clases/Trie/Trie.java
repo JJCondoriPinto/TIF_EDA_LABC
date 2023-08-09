@@ -1,5 +1,8 @@
 package Clases.Trie;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 public class Trie {
     private TrieNode root;
     private int currentIndex; // Índice actual para asignar a las palabras
@@ -21,6 +24,7 @@ public class Trie {
         for (String word : words) {
             word = word.replaceAll("\\p{M}", "");
             word = word.replaceAll("[^a-zA-Z]", "");
+            word = this.quitarTildes(word);
             insert(word.toLowerCase(), currentIndex++);
         }
     }
@@ -28,11 +32,15 @@ public class Trie {
     public void insert(String word) {
         word = word.replaceAll("\\p{M}", "");
         word = word.replaceAll("[^a-zA-Z]", "");
+        word = this.quitarTildes(word);
         this.insert(word, ++currentIndex);
     }
 
     public void insert(String word, int index) {
         TrieNode node = root;
+        word = word.replaceAll("\\p{M}", "");
+        word = word.replaceAll("[^a-zA-Z]", "");
+        word = this.quitarTildes(word);
         for (char c : word.toCharArray()) {
             int charIndex = c - 'a';
             if (node.children[charIndex] == null) {
@@ -71,5 +79,10 @@ public class Trie {
         return true;
     }
 
+    public String quitarTildes(String input) {
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
+    }
     
 }
