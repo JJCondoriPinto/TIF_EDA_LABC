@@ -37,6 +37,7 @@ public class FuncionalidadTrie { // Define los tries
 
     public int addFileText(String text, String titulo, String autor, String descripcion) {
         FileDB file = new FileDB(new Trie(text), titulo, autor, descripcion, countId);
+        file.setOriginalText(text); // Guardar el texto original
         this.listFiles.add(file);
         return countId++;
     }
